@@ -18,11 +18,12 @@ public class Creature : Entity
     public Intentions Intention { get; set; } = Intentions.None;
     public float VisualRange { get; set; }
     public float VisualAngel { get; set; }
-    public float TurnSpeed { get; set; }
     public float MaxMoveSpeed { get; set; }
-    public float Acceleration { get; set; }
-
-    private float _currentSpeed;
+    public float MoveSpeedAcceleration { get; set; }
+    private float _currentMoveSpeed;
+    public float MaxTurnSpeed { get; set; }
+    public float TurnSpeedAcceleration { get; set; }
+    private float _currentTurnSpeed;
 
     private Directions _turnDirection = Directions.None;
 
@@ -52,14 +53,16 @@ public class Creature : Entity
         Size = 16;
         Position = new Vector2(_random.Next(0 + Size / 2, world.Size - Size / 2),
             _random.Next(0 + Size / 2, world.Size - Size / 2));
-        TurnSpeed = 5f;
         MaxMoveSpeed = 1f;
-        VisualRange = 100;
+        MoveSpeedAcceleration = 100f / 30f / 100f;
+        MaxTurnSpeed = (float)(360 / (2.0 * (Size / 2.0) * Math.PI) * MaxMoveSpeed);
+        TurnSpeedAcceleration = 100f / 30f / 100f;
         VisualAngel = 130;
-        Acceleration = 100f / 30f / 100f;
+        VisualRange = 100;
         World = world;
         Direction = GetRandomDirection(0, 360);
-        _currentSpeed = 0;
+        _currentMoveSpeed = 0;
+        _currentTurnSpeed = 0;
     }
 
     /*public override string ToString()
@@ -90,7 +93,8 @@ public class Creature : Entity
         {
             if (ReachedTarget(_wanderTarget, MaxMoveSpeed * 2))
             {
-                _currentSpeed = 0;
+                _currentMoveSpeed = 0;
+                _currentTurnSpeed = 0;
                 return true;
             }
 
@@ -195,15 +199,15 @@ public class Creature : Entity
         TurnToTarget(target);
         var turnOnly = false;
 
-        var newSpeed = _currentSpeed;
+        var newSpeed = _currentMoveSpeed;
 
         if (Vector2.Distance(oldPosition, target) <= GetStoppingDistance())
         {
-            newSpeed = Math.Max(newSpeed - (MaxMoveSpeed * Acceleration), 0);
+            newSpeed = Math.Max(newSpeed - (MaxMoveSpeed * MoveSpeedAcceleration), 0);
         }
         else
         {
-            newSpeed = Math.Min(newSpeed + (MaxMoveSpeed * Acceleration), MaxMoveSpeed);
+            newSpeed = Math.Min(newSpeed + (MaxMoveSpeed * MoveSpeedAcceleration), MaxMoveSpeed);
         }
 
 
@@ -215,7 +219,7 @@ public class Creature : Entity
         else
         {
             Position = potentialNewPosition;
-            _currentSpeed = newSpeed;
+            _currentMoveSpeed = newSpeed;
             //log.DebugFormat($"Speed: {newSpeed}, Stopping Distance: {GetStoppingDistance()}");
         }
 
@@ -232,9 +236,16 @@ public class Creature : Entity
 
     private float GetStoppingDistance()
     {
-        float stoppingDistance = (_currentSpeed * _currentSpeed) / (2 * Acceleration * MaxMoveSpeed);
+        var stoppingDistance = (_currentMoveSpeed * _currentMoveSpeed) / (2 * MoveSpeedAcceleration * MaxMoveSpeed);
 
         return stoppingDistance;
+    }
+
+    private float GetStoppingDegree()
+    {
+        var stoppingDegree = (_currentTurnSpeed * _currentTurnSpeed) / (2 * TurnSpeedAcceleration * MaxTurnSpeed);
+
+        return stoppingDegree;
     }
 
     private void TurnToTarget(Vector2 target)
@@ -244,10 +255,29 @@ public class Creature : Entity
         var targetVector = target - Position;
         Degrees targetDirection = MathHelper.ToDegrees((float)Math.Atan2(targetVector.Y, targetVector.X));
         var targetDirectionMovement = (targetDirection - Direction);
-        Degrees targetDirectionMovementAfterTurnSpeed = Math.Clamp(targetDirectionMovement, -TurnSpeed, TurnSpeed);
 
+        if (Math.Abs(targetDirectionMovement) < 0.01f)
+        {
+            _currentTurnSpeed = 0;
+            return;
+        }
+
+        float newTurnSpeed = _currentTurnSpeed;
+        float stopDegree = GetStoppingDegree();
+        if (Math.Abs(targetDirectionMovement) <= GetStoppingDegree())
+        {
+            newTurnSpeed = Math.Max(newTurnSpeed - (MaxTurnSpeed * TurnSpeedAcceleration), 0);
+        }
+        else
+        {
+            newTurnSpeed = Math.Min(newTurnSpeed + (MaxTurnSpeed * TurnSpeedAcceleration), MaxTurnSpeed);
+        }
+
+        Degrees targetDirectionMovementAfterTurnSpeed =
+            Math.Clamp(targetDirectionMovement, -newTurnSpeed, newTurnSpeed);
+        _currentTurnSpeed = newTurnSpeed;
         Direction += targetDirectionMovementAfterTurnSpeed;
-
+        log.DebugFormat("Stop Degree: {0}, Speed: {1}, Degrees left: {2}", stopDegree, newTurnSpeed, targetDirectionMovement);
         if (Debug)
             log.DebugFormat(
                 "old Direction: {0}, target Direction: {1}, Direction Movement: {2}, Direction Movement Cap: {3}, new Direction: {4}",
