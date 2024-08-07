@@ -18,6 +18,10 @@ public class Creature : Entity
     public float TurnSpeed { get; set; }
     public float MoveSpeed { get; set; }
 
+    public float Acceleration { get; set; }
+
+    private float _currentSpeed;
+
     private Directions _turnDirection = Directions.None;
 
     public Vector2 _wanderTarget;
@@ -50,8 +54,10 @@ public class Creature : Entity
         MoveSpeed = 1f;
         VisualRange = 100;
         VisualAngel = 130;
+        Acceleration = 100f / 30f / 100f;
         World = world;
         Direction = GetRandomDirection(0, 360);
+        _currentSpeed = 0;
     }
 
     /*public override string ToString()
@@ -79,7 +85,15 @@ public class Creature : Entity
     private bool IsIntentionFulfilled()
     {
         if (Intention == Intentions.Wander)
-            return ReachedTarget(_wanderTarget, MoveSpeed * 5);
+        {
+
+            if (ReachedTarget(_wanderTarget, MoveSpeed * 2))
+            {
+                _currentSpeed = 0;
+                return true;
+            }
+            return false;
+        }
         if (Intention == Intentions.Wait)
             return _timeToWait <= 0;
         if (Intention == Intentions.Turn)
@@ -122,7 +136,7 @@ public class Creature : Entity
         }
         else if (Intention == Intentions.Wander)
         {
-            MoveToTarget(_wanderTarget, MoveSpeed);
+            MoveToTarget(_wanderTarget);
         }
         else if (Intention == Intentions.Turn)
         {
@@ -171,14 +185,26 @@ public class Creature : Entity
     }
 
 
-    private void MoveToTarget(Vector2 target, float speed)
+    private void MoveToTarget(Vector2 target)
     {
         var oldPosition = Position;
         var oldDirection = Direction;
         TurnToTarget(target);
         var turnOnly = false;
 
-        var potentialNewPosition = Position + Direction.ToVector2() * speed;
+        var newSpeed = _currentSpeed;
+
+        if (Vector2.Distance(oldPosition, target) <= GetStoppingDistance())
+        {
+            newSpeed = Math.Max(newSpeed - (MoveSpeed * Acceleration), 0);
+        }
+        else
+        {
+            newSpeed = Math.Min(newSpeed + (MoveSpeed * Acceleration), MoveSpeed);
+        }
+        
+
+        var potentialNewPosition = Position + Direction.ToVector2() * newSpeed;
         if (Vector2.Distance(oldPosition, target) < Vector2.Distance(potentialNewPosition, target))
         {
             turnOnly = true;
@@ -186,6 +212,8 @@ public class Creature : Entity
         else
         {
             Position = potentialNewPosition;
+            _currentSpeed = newSpeed;
+            log.DebugFormat($"Speed: {newSpeed}, Stopping Distance: {GetStoppingDistance()}");
         }
 
 
@@ -199,6 +227,13 @@ public class Creature : Entity
         }
     }
 
+    private float GetStoppingDistance()
+    {
+        float stoppingDistance = (_currentSpeed * _currentSpeed) / (2 * Acceleration * MoveSpeed);
+
+        return stoppingDistance;
+    }
+
     private void TurnToTarget(Vector2 target)
     {
         var oldDirection = Direction;
@@ -210,9 +245,11 @@ public class Creature : Entity
 
         Direction += targetDirectionMovementAfterTurnSpeed;
 
-        if(Debug)log.DebugFormat(
-            "old Direction: {0}, target Direction: {1}, Direction Movement: {2}, Direction Movement Cap: {3}, new Direction: {4}",
-            oldDirection, targetDirection, targetDirectionMovement, targetDirectionMovementAfterTurnSpeed, Direction);
+        if (Debug)
+            log.DebugFormat(
+                "old Direction: {0}, target Direction: {1}, Direction Movement: {2}, Direction Movement Cap: {3}, new Direction: {4}",
+                oldDirection, targetDirection, targetDirectionMovement, targetDirectionMovementAfterTurnSpeed,
+                Direction);
     }
 
     private bool ReachedTarget(Vector2 target, float threshold)
