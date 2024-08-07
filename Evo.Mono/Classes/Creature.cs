@@ -3,7 +3,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SharpDX;
+using BoundingSphere = Microsoft.Xna.Framework.BoundingSphere;
+using Ray = Microsoft.Xna.Framework.Ray;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Evo.Mono.Classes;
 
@@ -16,8 +19,7 @@ public class Creature : Entity
     public float VisualRange { get; set; }
     public float VisualAngel { get; set; }
     public float TurnSpeed { get; set; }
-    public float MoveSpeed { get; set; }
-
+    public float MaxMoveSpeed { get; set; }
     public float Acceleration { get; set; }
 
     private float _currentSpeed;
@@ -51,7 +53,7 @@ public class Creature : Entity
         Position = new Vector2(_random.Next(0 + Size / 2, world.Size - Size / 2),
             _random.Next(0 + Size / 2, world.Size - Size / 2));
         TurnSpeed = 5f;
-        MoveSpeed = 1f;
+        MaxMoveSpeed = 1f;
         VisualRange = 100;
         VisualAngel = 130;
         Acceleration = 100f / 30f / 100f;
@@ -86,14 +88,15 @@ public class Creature : Entity
     {
         if (Intention == Intentions.Wander)
         {
-
-            if (ReachedTarget(_wanderTarget, MoveSpeed * 2))
+            if (ReachedTarget(_wanderTarget, MaxMoveSpeed * 2))
             {
                 _currentSpeed = 0;
                 return true;
             }
+
             return false;
         }
+
         if (Intention == Intentions.Wait)
             return _timeToWait <= 0;
         if (Intention == Intentions.Turn)
@@ -196,13 +199,13 @@ public class Creature : Entity
 
         if (Vector2.Distance(oldPosition, target) <= GetStoppingDistance())
         {
-            newSpeed = Math.Max(newSpeed - (MoveSpeed * Acceleration), 0);
+            newSpeed = Math.Max(newSpeed - (MaxMoveSpeed * Acceleration), 0);
         }
         else
         {
-            newSpeed = Math.Min(newSpeed + (MoveSpeed * Acceleration), MoveSpeed);
+            newSpeed = Math.Min(newSpeed + (MaxMoveSpeed * Acceleration), MaxMoveSpeed);
         }
-        
+
 
         var potentialNewPosition = Position + Direction.ToVector2() * newSpeed;
         if (Vector2.Distance(oldPosition, target) < Vector2.Distance(potentialNewPosition, target))
@@ -213,7 +216,7 @@ public class Creature : Entity
         {
             Position = potentialNewPosition;
             _currentSpeed = newSpeed;
-            log.DebugFormat($"Speed: {newSpeed}, Stopping Distance: {GetStoppingDistance()}");
+            //log.DebugFormat($"Speed: {newSpeed}, Stopping Distance: {GetStoppingDistance()}");
         }
 
 
@@ -229,7 +232,7 @@ public class Creature : Entity
 
     private float GetStoppingDistance()
     {
-        float stoppingDistance = (_currentSpeed * _currentSpeed) / (2 * Acceleration * MoveSpeed);
+        float stoppingDistance = (_currentSpeed * _currentSpeed) / (2 * Acceleration * MaxMoveSpeed);
 
         return stoppingDistance;
     }
