@@ -13,6 +13,7 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D _circleTexture;
     private Texture2D _crossTexture;
+    private Texture2D _pixelTexture;
     private World _world;
     private FrameCounter _frameCounter;
     private GameSpeeds _gameSpeed;
@@ -41,8 +42,8 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
 
-        _world = new World { Size = 1000 };
-        for (int i = 0; i < 1; i++)
+        _world = new World { Size = 960 };
+        for (int i = 0; i < 1000; i++)
         {
             _world.Entities.Add(new Creature(i, _world));
         }
@@ -57,6 +58,8 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _circleTexture = Content.Load<Texture2D>("Textures/Circle");
         _crossTexture = Content.Load<Texture2D>("Textures/Cross");
+        _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+        _pixelTexture.SetData(new[] { Color.White });
     }
 
     protected override void Update(GameTime gameTime)
@@ -110,18 +113,28 @@ public class Game1 : Game
 
         //_spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.Black);
 
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.DarkBlue);
+
+        int screenWidth = GraphicsDevice.Viewport.Bounds.Width;
+        int screenHeight = GraphicsDevice.Viewport.Bounds.Height;
+
+        var mapPosition = new Vector2((screenWidth - _world.Size) / 2f, (screenHeight - _world.Size) / 2f);
 
         _spriteBatch.Begin();
+        
+        _spriteBatch.Draw(_pixelTexture, mapPosition, null,
+            Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.Size, _world.Size),
+            SpriteEffects.None, 0f);
+
         foreach (Creature entity in _world.Entities)
         {
-            _spriteBatch.Draw(_circleTexture, entity.TexturePosition, null, entity.Debug ? Color.Red : Color.Green,
+            _spriteBatch.Draw(_circleTexture, entity.TexturePosition + mapPosition, null, entity.Debug ? Color.Red : Color.Green,
                 (entity.Direction + 90).ToRadians(), new Vector2(_circleTexture.Width / 2, _circleTexture.Height / 2),
                 1f,
                 SpriteEffects.None, 0f);
             if (_showTargets)
                 _spriteBatch.Draw(_crossTexture,
-                    entity._wanderTarget - (new Vector2(_crossTexture.Width / 2, _crossTexture.Height / 2)), null,
+                    entity._wanderTarget + mapPosition - (new Vector2(_crossTexture.Width / 2, _crossTexture.Height / 2)), null,
                     Color.Black,
                     0.785398f, new Vector2(_crossTexture.Width / 2, _crossTexture.Height / 2), 1f,
                     SpriteEffects.None, 1f);

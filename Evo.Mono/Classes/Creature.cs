@@ -184,7 +184,7 @@ public class Creature : Entity
     private bool IsFacingBounds(Vector2 currentPosition, params Degrees[] directions)
     {
         return !Array.Exists(directions,
-            d => World.IsPositionOnWorld(Size / 2, (d.ToVector2() * VisualRange) + currentPosition));
+            d => World.IsPositionOnWorld(Size, (d.ToVector2() * VisualRange) + currentPosition));
     }
 
 
