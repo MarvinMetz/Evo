@@ -13,8 +13,8 @@ public class World
     public bool IsPositionOnWorld(float offset, params Vector2[] positions)
     {
         foreach (var position in positions)
-            if (position.X < 0 + offset || position.X > Size - offset || position.Y < 0 + offset ||
-                position.Y > Size - offset)
+            if (position.X < 0 + offset || position.X > Size || position.Y < 0 + offset ||
+                position.Y > Size)
             {
                 return false;
             }
