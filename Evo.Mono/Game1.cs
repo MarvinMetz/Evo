@@ -43,7 +43,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         _world = new World { Size = 960 };
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 10; i++)
         {
             _world.Entities.Add(new Creature(i, _world));
         }
