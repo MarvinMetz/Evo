@@ -54,9 +54,9 @@ public class Creature : Entity
         Position = new Vector2(_random.Next(0 + Size / 2, world.Size - Size / 2),
             _random.Next(0 + Size / 2, world.Size - Size / 2));
         MaxMoveSpeed = 1f;
-        MoveSpeedAcceleration = 100f / 30f / 100f;
+        MoveSpeedAcceleration = 100f / 60f / 100f;
         MaxTurnSpeed = (float)(360 / (2.0 * (Size / 2.0) * Math.PI) * MaxMoveSpeed);
-        TurnSpeedAcceleration = 100f / 30f / 100f;
+        TurnSpeedAcceleration = MoveSpeedAcceleration;
         VisualAngel = 130;
         VisualRange = 100;
         World = world;
@@ -277,7 +277,7 @@ public class Creature : Entity
             Math.Clamp(targetDirectionMovement, -newTurnSpeed, newTurnSpeed);
         _currentTurnSpeed = newTurnSpeed;
         Direction += targetDirectionMovementAfterTurnSpeed;
-        log.DebugFormat("Stop Degree: {0}, Speed: {1}, Degrees left: {2}", stopDegree, newTurnSpeed, targetDirectionMovement);
+        //log.DebugFormat("Stop Degree: {0}, Speed: {1}, Degrees left: {2}", stopDegree, newTurnSpeed, targetDirectionMovement);
         if (Debug)
             log.DebugFormat(
                 "old Direction: {0}, target Direction: {1}, Direction Movement: {2}, Direction Movement Cap: {3}, new Direction: {4}",
