@@ -13,6 +13,7 @@ public class Evo : Game
     private Texture2D _circleTexture;
     private Texture2D _crossTexture;
     private Texture2D _pixelTexture;
+    private SpriteFont _consolasFont;
     private World _world;
     private readonly FrameCounter _frameCounter;
     private GameSpeeds _gameSpeed;
@@ -57,6 +58,8 @@ public class Evo : Game
         _crossTexture = Content.Load<Texture2D>("Textures/Cross");
         _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         _pixelTexture.SetData([Color.White]);
+
+        _consolasFont = Content.Load<SpriteFont>("Fonts/Consolas");
     }
 
     protected override void Update(GameTime gameTime)
