@@ -17,7 +17,7 @@ public class World
 
     public World(int worldSize, int gridResolution)
     {
-        if (WorldSize % _gridResolution != 0)
+        if (worldSize % gridResolution != 0)
             throw new ArgumentException("Grid resolution must divide world size without remainder.",
                 nameof(gridResolution));
 
