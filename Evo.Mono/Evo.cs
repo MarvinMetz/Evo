@@ -124,7 +124,7 @@ public class Evo : Game
     {
         // Print fps to screen
         _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-        Window.Title = $"Speed: {_gameSpeed.ToAlternativeString()} FPS: {_frameCounter.AverageFramesPerSecond}";
+        Window.Title = "Evo";
 
         GraphicsDevice.Clear(Color.DarkBlue);
 
