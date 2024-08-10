@@ -36,7 +36,7 @@ public class Grid
         }
     }
 
-    public List<Node> FindPath(Node startNode, Node endNode)
+    public List<Node> FindPath(Node startNode, Node endNode, bool allowDiagonalMovement = true)
     {
         var openList = new List<PathNode> { new PathNode(startNode) };
         var closedList = new HashSet<PathNode>();
@@ -61,7 +61,7 @@ public class Grid
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            foreach (var neighbor in GetNeighbors(currentNode, pathfindingNodes))
+            foreach (var neighbor in GetNeighbors(currentNode, pathfindingNodes, allowDiagonalMovement))
             {
                 if (!neighbor.Walkable || closedList.Contains(neighbor))
                 {
@@ -88,15 +88,22 @@ public class Grid
         return [];
     }
 
-    private List<PathNode> GetNeighbors(PathNode node, List<PathNode> pathfindingNodes)
+    private List<PathNode> GetNeighbors(PathNode node, List<PathNode> pathfindingNodes, bool allowDiagonalMovement)
     {
         var neighbors = new List<PathNode>();
 
-        var directions = new (int x, int y)[]
+        var directions = new List<(int x, int y)>
         {
-            (-1, 0), (1, 0), (0, -1), (0, 1), // Up, Down, Left, Right
-            (-1, -1), (1, -1), (-1, 1), (1, 1) // Diagonals
+            (-1, 0), (1, 0), (0, -1), (0, 1)
         };
+
+        if (allowDiagonalMovement)
+        {
+            directions.AddRange(new (int x, int y)[]
+            {
+                (-1, -1), (1, -1), (-1, 1), (1, 1)
+            });
+        }
 
         foreach (var (dx, dy) in directions)
         {
