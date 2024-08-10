@@ -27,8 +27,8 @@ public class Grid
     public void SetBorderNodesWalkable(bool walkable)
     {
         var borderNodes = Nodes.Where(node =>
-            node.X == 0 || node.X == Nodes.Max(n => n.X) - 1 || node.Y == 0 ||
-            node.Y == Nodes.Max(n => n.Y) - 1).ToList();
+            node.X == Nodes.Min(n => n.X) || node.X == Nodes.Max(n => n.X) || node.Y == Nodes.Min(n => n.Y) ||
+            node.Y == Nodes.Max(n => n.Y)).ToList();
 
         foreach (var node in borderNodes)
         {

@@ -73,7 +73,7 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.NotEmpty(path);
-        Assert.Equal(9, path.Count); // Direct diagonal path in 5x5 grid
+        Assert.Equal(5, path.Count); // Direct diagonal path in 5x5 grid
         Assert.Equal(startNode, path.First());
         Assert.Equal(endNode, path.Last());
     }
