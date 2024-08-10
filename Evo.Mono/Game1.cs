@@ -42,7 +42,7 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
 
-        _world = new World { Size = 960 };
+        _world = new World(960, 16);
         for (int i = 0; i < 10; i++)
         {
             _world.Entities.Add(new Creature(i, _world));
@@ -118,12 +118,12 @@ public class Game1 : Game
         int screenWidth = GraphicsDevice.Viewport.Bounds.Width;
         int screenHeight = GraphicsDevice.Viewport.Bounds.Height;
 
-        var mapPosition = new Vector2((screenWidth - _world.Size) / 2f, (screenHeight - _world.Size) / 2f);
+        var mapPosition = new Vector2((screenWidth - _world.WorldSize) / 2f, (screenHeight - _world.WorldSize) / 2f);
 
         _spriteBatch.Begin();
         
         _spriteBatch.Draw(_pixelTexture, mapPosition, null,
-            Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.Size, _world.Size),
+            Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.WorldSize, _world.WorldSize),
             SpriteEffects.None, 0f);
 
         foreach (Creature entity in _world.Entities)

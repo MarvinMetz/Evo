@@ -51,8 +51,8 @@ public class Creature : Entity
         _random = new Random(randomSeed);
         _randomSeed = randomSeed;
         Size = 16;
-        Position = new Vector2(_random.Next(0 + Size / 2, world.Size - Size / 2),
-            _random.Next(0 + Size / 2, world.Size - Size / 2));
+        Position = new Vector2(_random.Next(0 + Size / 2, world.WorldSize - Size / 2),
+            _random.Next(0 + Size / 2, world.WorldSize - Size / 2));
         MaxMoveSpeed = 1f;
         MoveSpeedAcceleration = 100f / 60f / 100f;
         MaxTurnSpeed = (float)(360 / (2.0 * (Size / 2.0) * Math.PI) * MaxMoveSpeed);
