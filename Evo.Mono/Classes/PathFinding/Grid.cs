@@ -27,8 +27,11 @@ public class Grid
     public void SetBorderNodesWalkable(bool walkable)
     {
         var borderNodes = Nodes.Where(node =>
-            node.X == Nodes.Min(n => n.X) || node.X == Nodes.Max(n => n.X) || node.Y == Nodes.Min(n => n.Y) ||
-            node.Y == Nodes.Max(n => n.Y)).ToList();
+                node.X == Nodes.Min(n => n.X) ||
+                node.X == Nodes.Max(n => n.X) ||
+                node.Y == Nodes.Min(n => n.Y) ||
+                node.Y == Nodes.Max(n => n.Y))
+            .ToList();
 
         foreach (var node in borderNodes)
         {
@@ -43,15 +46,15 @@ public class Grid
 
         var pathfindingNodes = Nodes.Select(node => new PathNode(node)).ToList();
 
-        var start = pathfindingNodes.First(n => n.X == startNode.X && n.Y == startNode.Y);
-        var end = pathfindingNodes.First(n => n.X == endNode.X && n.Y == endNode.Y);
+        var start = GetPathNode(startNode, pathfindingNodes);
+        var end = GetPathNode(endNode, pathfindingNodes);
 
         start.G = 0;
         start.H = CalculateHeuristic(start, end);
 
         while (openList.Count > 0)
         {
-            var currentNode = openList.OrderBy(node => node.F).First();
+            var currentNode = GetNodeWithLowestF(openList);
 
             if (currentNode.X == end.X && currentNode.Y == end.Y)
             {
@@ -61,31 +64,61 @@ public class Grid
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            foreach (var neighbor in GetNeighbors(currentNode, pathfindingNodes, allowDiagonalMovement))
-            {
-                if (!neighbor.Walkable || closedList.Contains(neighbor))
-                {
-                    continue;
-                }
-
-                // 1.414 for diagonal movement
-                int tentativeG = currentNode.G + (currentNode.X != neighbor.X && currentNode.Y != neighbor.Y ? 14 : 10);
-
-                if (tentativeG < neighbor.G)
-                {
-                    neighbor.Parent = currentNode;
-                    neighbor.G = tentativeG;
-                    neighbor.H = CalculateHeuristic(neighbor, end);
-
-                    if (!openList.Contains(neighbor))
-                    {
-                        openList.Add(neighbor);
-                    }
-                }
-            }
+            UpdateNeighbors(currentNode, end, pathfindingNodes, openList, closedList, allowDiagonalMovement);
         }
 
         return [];
+    }
+
+    #region FindPath_HelperMethods
+
+    private void UpdateNeighbors(PathNode currentNode, PathNode endNode, List<PathNode> pathfindingNodes,
+        List<PathNode> openList,
+        HashSet<PathNode> closedList, bool allowDiagonalMovement)
+    {
+        foreach (var neighbor in GetNeighbors(currentNode, pathfindingNodes, allowDiagonalMovement))
+        {
+            if (!neighbor.Walkable || closedList.Contains(neighbor))
+            {
+                continue;
+            }
+
+            var tentativeG = GetMovementCost(currentNode, neighbor);
+
+            if (tentativeG >= neighbor.G) continue;
+            neighbor.Parent = currentNode;
+            neighbor.G = tentativeG;
+            neighbor.H = CalculateHeuristic(neighbor, endNode);
+
+            if (!openList.Contains(neighbor))
+            {
+                openList.Add(neighbor);
+            }
+        }
+    }
+
+    private static PathNode GetPathNode(Node nodeToFind, List<PathNode> pathfindingNodes)
+    {
+        var start = pathfindingNodes.First(n => n.X == nodeToFind.X && n.Y == nodeToFind.Y);
+        return start;
+    }
+
+    private static PathNode GetNodeWithLowestF(List<PathNode> openList)
+    {
+        var currentNode = openList.OrderBy(node => node.F).First();
+        return currentNode;
+    }
+
+    private static int GetMovementCost(PathNode currentNode, PathNode neighborNode)
+    {
+        // 1.414 for diagonal movement
+        var tentativeG = currentNode.G + (currentNode.X != neighborNode.X && currentNode.Y != neighborNode.Y ? 14 : 10);
+        return tentativeG;
+    }
+
+    private static int CalculateHeuristic(PathNode node, PathNode endNode)
+    {
+        return Math.Abs(node.X - endNode.X) + Math.Abs(node.Y - endNode.Y);
     }
 
     private List<PathNode> GetNeighbors(PathNode node, List<PathNode> pathfindingNodes, bool allowDiagonalMovement)
@@ -120,12 +153,7 @@ public class Grid
         return neighbors;
     }
 
-    private int CalculateHeuristic(PathNode node, PathNode endNode)
-    {
-        return Math.Abs(node.X - endNode.X) + Math.Abs(node.Y - endNode.Y);
-    }
-
-    private List<Node> ReconstructPath(PathNode endNode)
+    private static List<Node> ReconstructPath(PathNode endNode)
     {
         var path = new List<Node>();
         var currentNode = endNode;
@@ -139,4 +167,6 @@ public class Grid
         path.Reverse();
         return path;
     }
+
+    #endregion
 }
