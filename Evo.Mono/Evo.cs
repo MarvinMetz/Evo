@@ -134,7 +134,7 @@ public class Evo : Game
         var mapPosition = new Vector2((screenWidth - _world.WorldSize) / 2f, (screenHeight - _world.WorldSize) / 2f);
         var textPosition = mapPosition + new Vector2(10, 10); // Margin
 
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(SpriteSortMode.FrontToBack);
 
         _spriteBatch.Draw(_pixelTexture, mapPosition, null,
             Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.WorldSize, _world.WorldSize),
@@ -145,7 +145,7 @@ public class Evo : Game
             _gameSpeed.ToAlternativeString());
 
         _spriteBatch.DrawString(_consolasFont, pintInfos, textPosition, Color.Black, 0f, Vector2.Zero, 0.75f,
-            SpriteEffects.None, 0f);
+            SpriteEffects.None, 0.9f);
 
         foreach (var entity in _world.Entities)
         {
@@ -155,14 +155,14 @@ public class Evo : Game
                 (creature.Direction + 90).ToRadians(),
                 new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f),
                 1f,
-                SpriteEffects.None, 0f);
+                SpriteEffects.None, 0.2f);
             if (_showTargets)
                 _spriteBatch.Draw(_crossTexture,
                     creature.WanderTarget + mapPosition -
                     new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f), null,
                     Color.Black,
                     0.785398f, new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f), 1f,
-                    SpriteEffects.None, 1f);
+                    SpriteEffects.None, 0.1f);
         }
 
         _spriteBatch.End();
