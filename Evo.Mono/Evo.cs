@@ -39,7 +39,7 @@ public class Evo : Game
         graphics.PreferredBackBufferHeight = 1000;
         graphics.PreferredBackBufferWidth = 1000;
         graphics.SynchronizeWithVerticalRetrace = true;
-        IsFixedTimeStep = true;
+        IsFixedTimeStep = false;
         TargetElapsedTime = new TimeSpan((int)Math.Round(1000.0 / 144.0 * 10000.0));
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
