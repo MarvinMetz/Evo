@@ -347,4 +347,71 @@ public class GridTests
             Assert.Empty(path); // If start or end is non-walkable, path should be empty
         }
     }
+        [Fact]
+    public void FindPath_DiagonalMovementDisabled_NoDiagonalsUsed()
+    {
+        var grid = new Grid(3, 3);
+        var startNode = grid[0, 0];
+        var endNode = grid[2, 2];
+
+        var path = grid.FindPath(startNode, endNode, allowDiagonalMovement: false);
+
+        Assert.Equal(5, path.Count); // Without diagonal, it should take 5 steps (0,0) -> (0,1) -> (1,1) -> (1,2) -> (2,2)
+    }
+
+    [Fact]
+    public void FindPath_DiagonalMovementEnabled_UsesDiagonals()
+    {
+        var grid = new Grid(3, 3);
+        var startNode = grid[0, 0];
+        var endNode = grid[2, 2];
+
+        var path = grid.FindPath(startNode, endNode, allowDiagonalMovement: true);
+
+        Assert.Equal(3, path.Count); // With diagonal movement, it should take 3 steps (0,0) -> (1,1) -> (2,2)
+    }
+
+    [Fact]
+    public void FindPath_DiagonalMovementDisabled_AvoidsObstaclesCorrectly()
+    {
+        var grid = new Grid(3, 3);
+        grid[1, 1].Walkable = false; // Block the center node
+
+        var startNode = grid[0, 0];
+        var endNode = grid[2, 2];
+
+        var path = grid.FindPath(startNode, endNode, allowDiagonalMovement: false);
+
+        Assert.Equal(5, path.Count); // Path should go around the obstacle (e.g., (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2))
+        Assert.DoesNotContain(grid[1, 1], path); // Ensure path avoids the blocked center node
+    }
+
+    [Fact]
+    public void FindPath_DiagonalMovementEnabled_AvoidsObstaclesCorrectly()
+    {
+        var grid = new Grid(3, 3);
+        grid[1, 1].Walkable = false; // Block the center node
+
+        var startNode = grid[0, 0];
+        var endNode = grid[2, 2];
+
+        var path = grid.FindPath(startNode, endNode, allowDiagonalMovement: true);
+
+        Assert.Equal(5, path.Count); // Path should go around the obstacle (e.g., (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2))
+        Assert.DoesNotContain(grid[1, 1], path); // Ensure path avoids the blocked center node
+    }
+
+    [Fact]
+    public void FindPath_LargeGridWithToggleableDiagonal()
+    {
+        var grid = new Grid(50, 50);
+        var startNode = grid[0, 0];
+        var endNode = grid[49, 49];
+
+        var pathWithoutDiagonal = grid.FindPath(startNode, endNode, allowDiagonalMovement: false);
+        var pathWithDiagonal = grid.FindPath(startNode, endNode, allowDiagonalMovement: true);
+
+        Assert.NotEqual(pathWithoutDiagonal.Count, pathWithDiagonal.Count);
+        Assert.True(pathWithDiagonal.Count < pathWithoutDiagonal.Count); // Diagonal path should be shorter
+    }
 }
