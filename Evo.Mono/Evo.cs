@@ -22,6 +22,13 @@ public class Evo : Game
     private long _ticksSinceLastUpdate;
     private readonly int _updateInterval = (int)Math.Round(1000.0 / 60.0 * 10000.0);
 
+    private const string ControlDescription = "Exit:          ESC\n" +
+                                              "Show targets:  X\n" +
+                                              "Pause:         SPACE\n" +
+                                              "Speed up:      +\n" +
+                                              "Speed down:    -\n" +
+                                              "";
+
     public Evo()
     {
         var graphics = new GraphicsDeviceManager(this);
@@ -117,11 +124,15 @@ public class Evo : Game
         var screenHeight = GraphicsDevice.Viewport.Bounds.Height;
 
         var mapPosition = new Vector2((screenWidth - _world.WorldSize) / 2f, (screenHeight - _world.WorldSize) / 2f);
+        var textPosition = mapPosition + new Vector2(10, 10); // Margin
 
         _spriteBatch.Begin();
 
         _spriteBatch.Draw(_pixelTexture, mapPosition, null,
             Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.WorldSize, _world.WorldSize),
+            SpriteEffects.None, 0f);
+
+        _spriteBatch.DrawString(_consolasFont, ControlDescription, textPosition, Color.Black, 0f, Vector2.Zero, 0.75f,
             SpriteEffects.None, 0f);
 
         foreach (var entity in _world.Entities)
