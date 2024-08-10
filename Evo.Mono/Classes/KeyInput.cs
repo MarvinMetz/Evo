@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using System;
+using Microsoft.Xna.Framework.Input;
 
 namespace Evo.Mono.Classes;
 
@@ -13,14 +14,14 @@ public static class KeyInput
         _currentState = Keyboard.GetState();
         return _currentState;
     }
-    
+
     public static bool IsPressed(Keys key)
     {
         return _currentState.IsKeyDown(key);
     }
 
-    public static bool HasBeenPressed(Keys key)
+    public static bool HasBeenPressed(params Keys[] keys)
     {
-        return _currentState.IsKeyDown(key) && !_previousState.IsKeyDown(key);
+        return Array.Exists(keys, key => _currentState.IsKeyDown(key) && !_previousState.IsKeyDown(key));
     }
 }
