@@ -7,10 +7,10 @@ namespace Evo.Mono.Classes;
 
 public class World
 {
-    public int WorldSize { get; init; }
+    public int WorldSize { get; }
 
-    private Grid _grid;
-    private int _gridResolution;
+    private readonly Grid _grid;
+    private readonly int _gridResolution;
 
     public ICollection<Entity> Entities { get; set; } = [];
 

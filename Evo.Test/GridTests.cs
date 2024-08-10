@@ -55,7 +55,7 @@ public class GridTests
         grid.SetBorderNodesWalkable(false);
 
         var innerNodes = grid.Nodes.Where(n =>
-            n.X > 0 && n.X < 4 && n.Y > 0 && n.Y < 4);
+            n is { X: >0 and < 4, Y: > 0 and < 4 });
 
         foreach (var node in innerNodes)
         {
@@ -74,8 +74,8 @@ public class GridTests
 
         Assert.NotEmpty(path);
         Assert.Equal(5, path.Count); // Direct diagonal path in 5x5 grid
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -133,8 +133,8 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.Equal(3, path.Count); // Diagonal path: (0,0) -> (1,1) -> (2,2)
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -162,8 +162,8 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.Single(path);
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -192,8 +192,8 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.NotEmpty(path);
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class GridTests
         var grid = new Grid(10, 10);
 
         // Create a simple maze-like structure
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             if (i != 5) grid[5, i].Walkable = false;
         }
@@ -213,8 +213,8 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.NotEmpty(path);
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -234,8 +234,8 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.NotEmpty(path);
-        Assert.Equal(startNode, path.First());
-        Assert.Equal(endNode, path.Last());
+        Assert.Equal(startNode, path[0]);
+        Assert.Equal(endNode, path[^1]);
     }
 
     [Fact]
@@ -341,7 +341,7 @@ public class GridTests
         // Depending on randomness, path may or may not exist
         if (startNode.Walkable && endNode.Walkable)
         {
-            Assert.True(path.Count > 0 || path.Count == 0); // Path may or may not be found
+            Assert.True(path.Count is > 0 or 0); // Path may or may not be found
         }
         else
         {

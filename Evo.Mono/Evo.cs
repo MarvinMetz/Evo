@@ -56,7 +56,7 @@ public class Evo : Game
         _circleTexture = Content.Load<Texture2D>("Textures/Circle");
         _crossTexture = Content.Load<Texture2D>("Textures/Cross");
         _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _pixelTexture.SetData(new[] { Color.White });
+        _pixelTexture.SetData([Color.White]);
     }
 
     protected override void Update(GameTime gameTime)
@@ -132,8 +132,8 @@ public class Evo : Game
                 SpriteEffects.None, 0f);
             if (_showTargets)
                 _spriteBatch.Draw(_crossTexture,
-                    creature._wanderTarget + mapPosition -
-                    (new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f)), null,
+                    creature.WanderTarget + mapPosition -
+                    new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f), null,
                     Color.Black,
                     0.785398f, new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f), 1f,
                     SpriteEffects.None, 1f);

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Evo.Mono.Classes;
 
-public struct Degrees
+public readonly struct Degrees
 {
     private readonly float _value;
 
@@ -14,11 +14,16 @@ public struct Degrees
 
     private static float Normalize(float value)
     {
-        value = value % 360;
-        if (value > 180)
-            value -= 360;
-        else if (value <= -180)
-            value += 360;
+        value %= 360;
+        switch (value)
+        {
+            case > 180:
+                value -= 360;
+                break;
+            case <= -180:
+                value += 360;
+                break;
+        }
         return value;
     }
 
@@ -28,11 +33,11 @@ public struct Degrees
     }
 
     public override string ToString()
-        => _value.ToString() + "d";
+        => _value + "d";
 
     public float ToRadians()
     {
-        return ((float)Math.PI / 180f) * _value;
+        return (float)Math.PI / 180f * _value;
     }
 
     public Vector2 ToVector2()
@@ -43,7 +48,7 @@ public struct Degrees
     }
 
     public static implicit operator Degrees(float f)
-        => new Degrees(f);
+        => new (f);
 
     public static implicit operator float(Degrees d)
         => d._value;
@@ -52,8 +57,8 @@ public struct Degrees
         => d._value;
 
     public static Degrees operator +(Degrees a, Degrees b)
-        => new Degrees(a._value + b._value);
+        => new (a._value + b._value);
 
     public static Degrees operator -(Degrees a, Degrees b)
-        => new Degrees(a._value - b._value);
+        => new (a._value - b._value);
 }

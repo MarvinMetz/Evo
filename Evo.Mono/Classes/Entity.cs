@@ -9,7 +9,7 @@ public class Entity
     public Vector2 Position { get; set; }
     public int Size { get; set; }
 
-    public bool Debug = false;
+    public bool Debug { get; set; }
 
-    public Vector2 TexturePosition => new(Position.X - Size / 2, Position.Y - Size / 2);
+    public Vector2 TexturePosition => new(Position.X - Size / 2f, Position.Y - Size / 2f);
 }

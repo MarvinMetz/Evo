@@ -2,25 +2,25 @@
 
 namespace Evo.Mono.Classes;
 
-public class KeyInput
+public static class KeyInput
 {
-    private static KeyboardState currentState;
-    private static KeyboardState previousState;
+    private static KeyboardState _currentState;
+    private static KeyboardState _previousState;
 
     public static KeyboardState GetState()
     {
-        previousState = currentState;
-        currentState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
-        return currentState;
+        _previousState = _currentState;
+        _currentState = Keyboard.GetState();
+        return _currentState;
     }
     
     public static bool IsPressed(Keys key)
     {
-        return currentState.IsKeyDown(key);
+        return _currentState.IsKeyDown(key);
     }
 
     public static bool HasBeenPressed(Keys key)
     {
-        return currentState.IsKeyDown(key) && !previousState.IsKeyDown(key);
+        return _currentState.IsKeyDown(key) && !_previousState.IsKeyDown(key);
     }
 }
