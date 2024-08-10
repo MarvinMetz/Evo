@@ -71,6 +71,30 @@ public class Evo : Game
 
     protected override void Update(GameTime gameTime)
     {
+        HandleInput();
+
+        if (_gameSpeed != GameSpeeds.Pause)
+        {
+            _ticksSinceLastUpdate += gameTime.ElapsedGameTime.Ticks;
+            var gameUpdates = (int)(_ticksSinceLastUpdate / (_updateInterval * _gameSpeed.GetSpeedValue()));
+
+            for (var i = 0; i < gameUpdates; i++)
+            {
+                foreach (var entity in _world.Entities)
+                {
+                    var creature = entity as Creature;
+                    creature?.Update(gameTime);
+                }
+            }
+
+            _ticksSinceLastUpdate -= (int)(_updateInterval * _gameSpeed.GetSpeedValue() * gameUpdates);
+        }
+
+        base.Update(gameTime);
+    }
+
+    private void HandleInput()
+    {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
@@ -91,25 +115,6 @@ public class Evo : Game
                 _gameSpeed = GameSpeeds.Pause;
             }
         }
-
-        if (_gameSpeed != GameSpeeds.Pause)
-        {
-            _ticksSinceLastUpdate += gameTime.ElapsedGameTime.Ticks;
-            var gameUpdates = (int)(_ticksSinceLastUpdate / (_updateInterval * _gameSpeed.GetSpeedValue()));
-
-            for (var i = 0; i < gameUpdates; i++)
-            {
-                foreach (var entity in _world.Entities)
-                {
-                    var creature = entity as Creature;
-                    creature?.Update(gameTime);
-                }
-            }
-
-            _ticksSinceLastUpdate -= (int)(_updateInterval * _gameSpeed.GetSpeedValue() * gameUpdates);
-        }
-
-        base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
