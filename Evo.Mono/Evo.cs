@@ -101,8 +101,8 @@ public class Evo : Game
 
         KeyInput.GetState();
         if (KeyInput.HasBeenPressed(Keys.X)) _showTargets = !_showTargets;
-        if (KeyInput.HasBeenPressed(Keys.OemPlus)) _gameSpeed = _gameSpeed.GetNextGameSpeed();
-        if (KeyInput.HasBeenPressed(Keys.OemMinus)) _gameSpeed = _gameSpeed.GetPreviousGameSpeed();
+        if (KeyInput.HasBeenPressed(Keys.OemPlus, Keys.Add)) _gameSpeed = _gameSpeed.GetNextGameSpeed();
+        if (KeyInput.HasBeenPressed(Keys.OemMinus, Keys.Subtract)) _gameSpeed = _gameSpeed.GetPreviousGameSpeed();
         if (KeyInput.HasBeenPressed(Keys.Space))
         {
             if (_gameSpeed == GameSpeeds.Pause)
