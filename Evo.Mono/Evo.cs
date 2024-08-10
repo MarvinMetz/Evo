@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Evo.Mono;
 
-public class Game1 : Game
+public class Evo : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -22,7 +22,7 @@ public class Game1 : Game
     private long _ticksSinceLastUpdate;
     private readonly int _updateInterval = (int)Math.Round(1000.0 / 60.0 * 10000.0);
 
-    public Game1()
+    public Evo()
     {
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = false;
