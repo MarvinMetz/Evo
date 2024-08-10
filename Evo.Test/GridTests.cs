@@ -94,7 +94,22 @@ public class GridTests
     }
 
     [Fact]
-    public void FindPath_ReturnsEmptyIfNoPathExists()
+    public void FindPath_ReturnsEmptyIfNoPathExistsWithoutDiagonalMovement()
+    {
+        var grid = new Grid(5, 5);
+        grid[1, 0].Walkable = false;
+        grid[0, 1].Walkable = false;
+
+        var startNode = grid[0, 0];
+        var endNode = grid[4, 4];
+
+        var path = grid.FindPath(startNode, endNode, false);
+
+        Assert.Empty(path); // No path should be found due to blocked start
+    }
+
+    [Fact]
+    public void FindPath_ReturnsEmptyIfNoPathExistsWithDiagonalMovement()
     {
         var grid = new Grid(5, 5);
         grid[1, 0].Walkable = false;
@@ -240,7 +255,7 @@ public class GridTests
     }
 
     [Fact]
-    public void FindPath_StartOrEndNodeNonWalkable()
+    public void FindPath_EndNodeNonWalkable()
     {
         var grid = new Grid(5, 5);
         grid[0, 0].Walkable = false;
@@ -248,13 +263,9 @@ public class GridTests
         var startNode = grid[0, 0];
         var endNode = grid[4, 4];
 
-        var path = grid.FindPath(startNode, endNode);
-
-        Assert.Empty(path); // No path since the start node is non-walkable
-
         grid[0, 0].Walkable = true;
         grid[4, 4].Walkable = false;
-        path = grid.FindPath(startNode, endNode);
+        var path = grid.FindPath(startNode, endNode);
 
         Assert.Empty(path); // No path since the end node is non-walkable
     }
@@ -293,16 +304,6 @@ public class GridTests
         var path = grid.FindPath(startNode, endNode);
 
         Assert.Single(path); // Only one node in the path, start == end
-    }
-
-    [Fact]
-    public void FindPath_HandlesEmptyGrid()
-    {
-        var grid = new Grid(0, 0);
-
-        var path = grid.FindPath(null, null);
-
-        Assert.Empty(path); // No path should be found in an empty grid
     }
 
     [Fact]

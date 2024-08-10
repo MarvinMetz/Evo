@@ -44,7 +44,9 @@ public class Grid
         var openList = new List<PathNode> { new PathNode(startNode) };
         var closedList = new HashSet<PathNode>();
 
-        var pathfindingNodes = Nodes.Select(node => new PathNode(node)).ToList();
+        var pathfindingNodes = Nodes
+            .Select(node => new PathNode(node))
+            .ToDictionary(node => (node.X, node.Y), node => node);
 
         var start = GetPathNode(startNode, pathfindingNodes);
         var end = GetPathNode(endNode, pathfindingNodes);
@@ -72,7 +74,8 @@ public class Grid
 
     #region FindPath_HelperMethods
 
-    private void UpdateNeighbors(PathNode currentNode, PathNode endNode, List<PathNode> pathfindingNodes,
+    private void UpdateNeighbors(PathNode currentNode, PathNode endNode,
+        Dictionary<(int X, int Y), PathNode> pathfindingNodes,
         List<PathNode> openList,
         HashSet<PathNode> closedList, bool allowDiagonalMovement)
     {
@@ -97,10 +100,9 @@ public class Grid
         }
     }
 
-    private static PathNode GetPathNode(Node nodeToFind, List<PathNode> pathfindingNodes)
+    private static PathNode GetPathNode(Node nodeToFind, Dictionary<(int X, int Y), PathNode> pathfindingNodes)
     {
-        var start = pathfindingNodes.First(n => n.X == nodeToFind.X && n.Y == nodeToFind.Y);
-        return start;
+        return pathfindingNodes[(nodeToFind.X, nodeToFind.Y)];
     }
 
     private static PathNode GetNodeWithLowestF(List<PathNode> openList)
@@ -121,7 +123,8 @@ public class Grid
         return Math.Abs(node.X - endNode.X) + Math.Abs(node.Y - endNode.Y);
     }
 
-    private List<PathNode> GetNeighbors(PathNode node, List<PathNode> pathfindingNodes, bool allowDiagonalMovement)
+    private List<PathNode> GetNeighbors(PathNode node, Dictionary<(int X, int Y), PathNode> pathfindingNodes,
+        bool allowDiagonalMovement)
     {
         var neighbors = new List<PathNode>();
 
@@ -140,14 +143,23 @@ public class Grid
 
         foreach (var (dx, dy) in directions)
         {
-            int neighborX = node.X + dx;
-            int neighborY = node.Y + dy;
+            var neighborX = node.X + dx;
+            var neighborY = node.Y + dy;
 
-            var neighbor = pathfindingNodes.Find(n => n.X == neighborX && n.Y == neighborY);
-            if (neighbor != null)
+            if (!pathfindingNodes.TryGetValue((neighborX, neighborY), out var neighbor) || !neighbor.Walkable) continue;
+            // If diagonal movement, check the adjacent nodes for walkability
+            if (dx != 0 && dy != 0)
             {
-                neighbors.Add(neighbor);
+                var adjacent1 = pathfindingNodes[(node.X + dx, node.Y)];
+                var adjacent2 = pathfindingNodes[(node.X, node.Y + dy)];
+
+                if (!adjacent1.Walkable || !adjacent2.Walkable)
+                {
+                    continue;
+                }
             }
+
+            neighbors.Add(neighbor);
         }
 
         return neighbors;
