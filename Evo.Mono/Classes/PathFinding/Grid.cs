@@ -6,7 +6,7 @@ namespace Evo.Mono.Classes.PathFinding;
 
 public class Grid
 {
-    public IEnumerable<Node> Nodes { get; private set; }
+    public IEnumerable<Node> Nodes { get; }
 
     public Node this[int x, int y] => GetNodeAt(x, y);
 
@@ -41,7 +41,7 @@ public class Grid
 
     public List<Node> FindPath(Node startNode, Node endNode, bool allowDiagonalMovement = true)
     {
-        var openList = new List<PathNode> { new PathNode(startNode) };
+        var openList = new List<PathNode> { new (startNode) };
         var closedList = new HashSet<PathNode>();
 
         var pathfindingNodes = Nodes
@@ -74,7 +74,7 @@ public class Grid
 
     #region FindPath_HelperMethods
 
-    private void UpdateNeighbors(PathNode currentNode, PathNode endNode,
+    private static void UpdateNeighbors(PathNode currentNode, PathNode endNode,
         Dictionary<(int X, int Y), PathNode> pathfindingNodes,
         List<PathNode> openList,
         HashSet<PathNode> closedList, bool allowDiagonalMovement)
@@ -123,7 +123,7 @@ public class Grid
         return Math.Abs(node.X - endNode.X) + Math.Abs(node.Y - endNode.Y);
     }
 
-    private List<PathNode> GetNeighbors(PathNode node, Dictionary<(int X, int Y), PathNode> pathfindingNodes,
+    private static List<PathNode> GetNeighbors(PathNode node, Dictionary<(int X, int Y), PathNode> pathfindingNodes,
         bool allowDiagonalMovement)
     {
         var neighbors = new List<PathNode>();
