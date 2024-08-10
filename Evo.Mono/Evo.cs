@@ -9,26 +9,25 @@ namespace Evo.Mono;
 
 public class Evo : Game
 {
-    private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D _circleTexture;
     private Texture2D _crossTexture;
     private Texture2D _pixelTexture;
     private World _world;
-    private FrameCounter _frameCounter;
+    private readonly FrameCounter _frameCounter;
     private GameSpeeds _gameSpeed;
     private GameSpeeds _previousGameSpeed;
-    private bool _showTargets = false;
+    private bool _showTargets;
     private long _ticksSinceLastUpdate;
     private readonly int _updateInterval = (int)Math.Round(1000.0 / 60.0 * 10000.0);
 
     public Evo()
     {
-        _graphics = new GraphicsDeviceManager(this);
-        _graphics.IsFullScreen = false;
-        _graphics.PreferredBackBufferHeight = 1000;
-        _graphics.PreferredBackBufferWidth = 1000;
-        _graphics.SynchronizeWithVerticalRetrace = true;
+        var graphics = new GraphicsDeviceManager(this);
+        graphics.IsFullScreen = false;
+        graphics.PreferredBackBufferHeight = 1000;
+        graphics.PreferredBackBufferWidth = 1000;
+        graphics.SynchronizeWithVerticalRetrace = true;
         IsFixedTimeStep = true;
         TargetElapsedTime = new TimeSpan((int)Math.Round(1000.0 / 144.0 * 10000.0));
         Content.RootDirectory = "Content";
@@ -40,10 +39,8 @@ public class Evo : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         _world = new World(960, 16);
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             _world.Entities.Add(new Creature(i, _world));
         }
@@ -111,60 +108,38 @@ public class Evo : Game
         _frameCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         Window.Title = $"Speed: {_gameSpeed.ToAlternativeString()} FPS: {_frameCounter.AverageFramesPerSecond}";
 
-        //_spriteBatch.DrawString(_spriteFont, fps, new Vector2(1, 1), Color.Black);
-
         GraphicsDevice.Clear(Color.DarkBlue);
 
-        int screenWidth = GraphicsDevice.Viewport.Bounds.Width;
-        int screenHeight = GraphicsDevice.Viewport.Bounds.Height;
+        var screenWidth = GraphicsDevice.Viewport.Bounds.Width;
+        var screenHeight = GraphicsDevice.Viewport.Bounds.Height;
 
         var mapPosition = new Vector2((screenWidth - _world.WorldSize) / 2f, (screenHeight - _world.WorldSize) / 2f);
 
         _spriteBatch.Begin();
-        
+
         _spriteBatch.Draw(_pixelTexture, mapPosition, null,
             Color.CornflowerBlue, 0f, Vector2.Zero, new Vector2(_world.WorldSize, _world.WorldSize),
             SpriteEffects.None, 0f);
 
-        foreach (Creature entity in _world.Entities)
+        foreach (var entity in _world.Entities)
         {
-            _spriteBatch.Draw(_circleTexture, entity.TexturePosition + mapPosition, null, entity.Debug ? Color.Red : Color.Green,
-                (entity.Direction + 90).ToRadians(), new Vector2(_circleTexture.Width / 2, _circleTexture.Height / 2),
+            if (entity is not Creature creature) continue;
+            _spriteBatch.Draw(_circleTexture, creature.TexturePosition + mapPosition, null,
+                creature.Debug ? Color.Red : Color.Green,
+                (creature.Direction + 90).ToRadians(),
+                new Vector2(_circleTexture.Width / 2f, _circleTexture.Height / 2f),
                 1f,
                 SpriteEffects.None, 0f);
             if (_showTargets)
                 _spriteBatch.Draw(_crossTexture,
-                    entity._wanderTarget + mapPosition - (new Vector2(_crossTexture.Width / 2, _crossTexture.Height / 2)), null,
+                    creature._wanderTarget + mapPosition -
+                    (new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f)), null,
                     Color.Black,
-                    0.785398f, new Vector2(_crossTexture.Width / 2, _crossTexture.Height / 2), 1f,
+                    0.785398f, new Vector2(_crossTexture.Width / 2f, _crossTexture.Height / 2f), 1f,
                     SpriteEffects.None, 1f);
         }
 
-        // (x, y)
-
-        /*
-        var position = new Vector2(500, 500);
-        var target = new Vector2(700, 300);
-
-        Degrees direction = 90f;
-
-        var positionToTarget = target - position;
-
-        Degrees positionToTargetDirection = MathHelper.ToDegrees((float)Math.Atan2(positionToTarget.Y, positionToTarget.X));
-
-        var positionInDirection = direction.ToVector2() * 100;
-        positionInDirection += position;
-
-        Console.WriteLine(positionToTargetDirection);
-
-        _spriteBatch.Draw(_circleTexture, position, null, Color.Aqua,
-            (direction+90).ToRadians(), new Vector2(_circleTexture.Width / 2, _circleTexture.Height / 2), 1f,
-            SpriteEffects.None, 0f);
-            */
-
         _spriteBatch.End();
-
-        // TODO: Add your drawing code here
 
         base.Draw(gameTime);
     }
