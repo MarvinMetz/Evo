@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using SharpDX;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace Evo.Mono.Classes;
+namespace Evo.Classes;
 
 public class Creature : Entity
 {

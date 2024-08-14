@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Evo.Mono.Classes;
+using Evo.Classes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Evo.Mono;
+namespace Evo;
 
 public class Evo : Game
 {

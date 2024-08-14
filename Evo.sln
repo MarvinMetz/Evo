@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evo.Mono", "Evo.Mono\Evo.Mono.csproj", "{66304542-8344-4888-B132-4F5FC5516D5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evo", "Evo\Evo.csproj", "{66304542-8344-4888-B132-4F5FC5516D5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evo.Test", "Evo.Test\Evo.Test.csproj", "{0BA4517C-7C6A-4954-934C-735C305C1A53}"
 EndProject

@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Evo.Mono\Evo.Mono.csproj" />
+      <ProjectReference Include="..\Evo\Evo.csproj" />
     </ItemGroup>
 
 </Project>

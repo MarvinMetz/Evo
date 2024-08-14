@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace Evo.Mono.Classes;
+namespace Evo.Classes;
 
 public class Entity
 {

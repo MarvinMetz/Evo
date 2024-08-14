@@ -1,4 +1,4 @@
-﻿namespace Evo.Mono.Classes;
+﻿namespace Evo.Classes;
 
 public enum Directions
 {

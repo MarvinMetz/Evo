@@ -7,6 +7,7 @@
         <TieredCompilation>false</TieredCompilation>
         <UseWindowsForms>true</UseWindowsForms>
         <LangVersion>12</LangVersion>
+        <AssemblyName>Evo</AssemblyName>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>

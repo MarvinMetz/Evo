@@ -1,4 +1,4 @@
-namespace Evo.Mono.Classes.Intention;
+namespace Evo.Classes.Intention;
 
 public class IntentionNone : IIntention
 {
