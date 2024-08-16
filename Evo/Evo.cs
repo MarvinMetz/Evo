@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Evo.Classes;
+using Evo.Core.Entities;
+using Evo.Core.Enviroment;
+using Evo.System;
+using Evo.System.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

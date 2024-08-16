@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
 
-namespace Evo.Classes;
+namespace Evo.System;
 
 public static class KeyInput
 {

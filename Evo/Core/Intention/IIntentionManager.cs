@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Evo.Classes.Intention;
+namespace Evo.Core.Intention;
 
 public interface IIntentionManager
 {

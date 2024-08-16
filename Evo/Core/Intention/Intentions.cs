@@ -1,4 +1,4 @@
-﻿namespace Evo.Classes;
+﻿namespace Evo.Core.Intention;
 
 public enum Intentions
 {

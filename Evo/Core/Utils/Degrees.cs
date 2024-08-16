@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace Evo.Classes;
+namespace Evo.Core.Utils;
 
 public readonly struct Degrees
 {

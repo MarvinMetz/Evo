@@ -1,14 +1,17 @@
 ﻿using System;
+using Evo.Core.Enviroment;
+using Evo.Core.Intention;
+using Evo.Core.Utils;
 using Microsoft.Xna.Framework;
 using SharpDX;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace Evo.Classes;
+namespace Evo.Core.Entities;
 
 public class Creature : Entity
 {
     private static readonly log4net.ILog Log =
-        log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+        log4net.LogManager.GetLogger(global::System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
     public Intentions Intention { get; set; } = Intentions.None;
     public float VisualRange { get; set; }

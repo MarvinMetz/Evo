@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Evo.Classes;
+namespace Evo.System.Utils;
 
 public class FrameCounter
 {

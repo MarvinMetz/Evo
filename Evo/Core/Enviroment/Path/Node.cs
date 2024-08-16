@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Evo.Classes.PathFinding;
+namespace Evo.Core.Enviroment.Path;
 
 public class Node(int x, int y)
 {

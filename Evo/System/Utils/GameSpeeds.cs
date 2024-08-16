@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Evo.Classes;
+namespace Evo.System.Utils;
 
 public enum GameSpeeds
 {

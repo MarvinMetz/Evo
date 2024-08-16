@@ -1,4 +1,4 @@
-using Evo.Classes.PathFinding;
+using Evo.Core.Enviroment.Path;
 using Xunit;
 
 namespace Evo.Test;

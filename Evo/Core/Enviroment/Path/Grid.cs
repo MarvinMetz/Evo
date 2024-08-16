@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Evo.Classes.PathFinding;
+namespace Evo.Core.Enviroment.Path;
 
 public class Grid
 {
