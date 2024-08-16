@@ -5,10 +5,9 @@ namespace Evo.Core.Enviroment.Path;
 
 public class Node(int x, int y)
 {
-    public Point Position { get; } = new(x, y);
+    public int X { get; } = x;
+    public int Y { get; } = y;
     public bool Walkable { get; set; } = true;
-    public int X => Position.X;
-    public int Y => Position.Y;
 }
 
 public class PathNode(Node baseNode)
