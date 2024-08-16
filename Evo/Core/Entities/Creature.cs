@@ -1,5 +1,5 @@
 ﻿using System;
-using Evo.Core.Enviroment;
+using Evo.Core.Environment;
 using Evo.Core.Intention;
 using Evo.Core.Utils;
 using Microsoft.Xna.Framework;

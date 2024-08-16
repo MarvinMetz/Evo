@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Evo.Core.Entities;
-using Evo.Core.Enviroment.Path;
+using Evo.Core.Environment.Path;
 using Microsoft.Xna.Framework;
 
-namespace Evo.Core.Enviroment;
+namespace Evo.Core.Environment;
 
 public class World
 {

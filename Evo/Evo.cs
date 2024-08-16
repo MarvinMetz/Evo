@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Evo.Core.Entities;
-using Evo.Core.Enviroment;
+using Evo.Core.Environment;
 using Evo.System;
 using Evo.System.Utils;
 using Microsoft.Xna.Framework;

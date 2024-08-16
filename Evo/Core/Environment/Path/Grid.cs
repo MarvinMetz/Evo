@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Evo.Core.Enviroment.Path;
+namespace Evo.Core.Environment.Path;
 
 public class Grid
 {
