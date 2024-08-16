@@ -43,4 +43,11 @@ public class World
 
         return true;
     }
+
+    public Node GetNodeAt(Position position)
+    {
+        var gridX = (int)Math.Floor(position.Location.X / _gridResolution);
+        var gridY = (int)Math.Floor(position.Location.Y / _gridResolution);
+        return _grid[gridX, gridY];
+    }
 }
